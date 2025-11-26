@@ -132,15 +132,15 @@ SY: It's just a little guy that needs to pay its employees :(`,
     },
   ];
 
-  // Video posts
+  // Video posts - varied heights for masonry layout
   const videoPosts = [
     {
       id: 'v1',
       type: 'video',
       username: 'video-creator',
-      content: 'Check out this amazing timelapse of a city at night!',
+      content: 'Check out this amazing timelapse of a city at night! The way the lights come alive as darkness falls is absolutely mesmerizing. I spent hours capturing this footage from multiple angles.',
       videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-      tags: ['video', 'timelapse', 'city', 'night'],
+      tags: ['video', 'timelapse', 'city', 'night', 'photography', 'urban', 'lights', 'aesthetic'],
       notes: 1234,
       reblogs: 567,
       likes: 8900,
@@ -162,9 +162,9 @@ SY: It's just a little guy that needs to pay its employees :(`,
       id: 'v3',
       type: 'video',
       username: 'tutorial-master',
-      content: 'Quick tutorial on how to create amazing digital art!',
+      content: 'Quick tutorial on how to create amazing digital art! In this video, I\'ll walk you through my entire process from sketch to final piece. We\'ll cover color theory, composition, and some advanced techniques that will take your art to the next level. Make sure to subscribe for more tutorials!',
       videoUrl: 'https://www.youtube.com/embed/9bZkp7q19f0',
-      tags: ['tutorial', 'art', 'digital', 'how-to'],
+      tags: ['tutorial', 'art', 'digital', 'how-to', 'digital art', 'tutorial', 'procreate', 'photoshop', 'art tips'],
       notes: 890,
       reblogs: 456,
       likes: 3400,
@@ -186,13 +186,49 @@ SY: It's just a little guy that needs to pay its employees :(`,
       id: 'v5',
       type: 'video',
       username: 'nature-docs',
-      content: 'The beauty of nature never ceases to amaze me.',
-      videoUrl: 'https://www.youtube.com/embed/9bZkp7q19f0',
-      tags: ['nature', 'documentary', 'wildlife', 'beautiful'],
+      content: 'The beauty of nature never ceases to amaze me. This documentary explores the hidden world of forest ecosystems and the incredible creatures that call them home. From the smallest insects to the largest predators, every living thing plays a crucial role in maintaining the balance of these complex environments.',
+      videoUrl: 'https://www.youtube.com/embed/kJQP7kiw5Fk',
+      tags: ['nature', 'documentary', 'wildlife', 'beautiful', 'animals', 'forest', 'ecosystem', 'conservation'],
       notes: 1234,
       reblogs: 890,
       likes: 5600,
       duration: '4:56',
+    },
+    {
+      id: 'v6',
+      type: 'video',
+      username: 'short-clips',
+      content: 'Quick moment that made my day ✨',
+      videoUrl: 'https://www.youtube.com/embed/OPf0YbXqDm0',
+      tags: ['short', 'moment', 'wholesome'],
+      notes: 234,
+      reblogs: 123,
+      likes: 890,
+      duration: '0:45',
+    },
+    {
+      id: 'v7',
+      type: 'video',
+      username: 'art-showcase',
+      content: 'Behind the scenes of my latest project! This took weeks to complete and I\'m so excited to finally share it with you all. The process was challenging but incredibly rewarding. Let me know what you think in the comments below!',
+      videoUrl: 'https://www.youtube.com/embed/M7FIvfx5J10',
+      tags: ['art', 'behind the scenes', 'process', 'creative', 'artist', 'work in progress', 'finished piece'],
+      notes: 890,
+      reblogs: 456,
+      likes: 2300,
+      duration: '3:20',
+    },
+    {
+      id: 'v8',
+      type: 'video',
+      username: 'daily-vibes',
+      content: 'Just vibing',
+      videoUrl: 'https://www.youtube.com/embed/ScMzIvxBSi4',
+      tags: ['vibes', 'chill'],
+      notes: 45,
+      reblogs: 23,
+      likes: 156,
+      duration: '0:30',
     },
   ];
 
@@ -335,33 +371,59 @@ SY: It's just a little guy that needs to pay its employees :(`,
 
         {/* Main Content */}
         <div className="flex flex-col md:flex-row">
-          {/* Left Column - Trending Tags (hidden below 768px) */}
-          <div className="hidden md:block md:w-80 lg:w-96 p-4 md:p-6 md:border-r border-gray-700">
-            <div className="grid grid-cols-2 gap-3">
-              {trendingTags.map((tag) => (
-                <TrendingTag key={tag.rank} {...tag} />
-              ))}
-            </div>
-          </div>
-
-          {/* Center Column - Posts */}
-          <div className="flex-1 w-full md:max-w-2xl lg:max-w-3xl p-4 md:p-6 mx-auto">
-            {/* Trending Tags on mobile (below 768px) */}
-            <div className="md:hidden mb-6">
+          {/* Left Column - Trending Tags (hidden below 768px and on Videos tab) */}
+          {activeTab !== 'videos' && (
+            <div className="hidden md:block md:w-80 lg:w-96 p-4 md:p-6 md:border-r border-gray-700">
               <div className="grid grid-cols-2 gap-3">
                 {trendingTags.map((tag) => (
                   <TrendingTag key={tag.rank} {...tag} />
                 ))}
               </div>
             </div>
+          )}
 
-            {currentContent.map((item) => {
-              if (item.type === 'video') {
-                return <VideoPost key={item.id} {...item} />;
-              } else {
-                return <Post key={item.id} {...item} />;
-              }
-            })}
+          {/* Center Column - Posts */}
+          <div className={`flex-1 w-full p-4 md:p-6 mx-auto ${activeTab === 'videos' ? 'max-w-7xl' : 'md:max-w-2xl lg:max-w-3xl'}`}>
+            {/* Trending Tags on mobile (below 768px, hidden on Videos tab) */}
+            {activeTab !== 'videos' && (
+              <div className="md:hidden mb-6">
+                <div className="grid grid-cols-2 gap-3">
+                  {trendingTags.map((tag) => (
+                    <TrendingTag key={tag.rank} {...tag} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Videos Tab - Masonry Layout */}
+            {activeTab === 'videos' ? (
+              <div className="masonry-container">
+                {currentContent.map((item) => {
+                  if (item.type === 'video') {
+                    return (
+                      <div key={item.id} className="masonry-item">
+                        <VideoPost {...item} />
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div key={item.id} className="masonry-item">
+                        <Post {...item} />
+                      </div>
+                    );
+                  }
+                })}
+              </div>
+            ) : (
+              /* Other Tabs - Single Column */
+              currentContent.map((item) => {
+                if (item.type === 'video') {
+                  return <VideoPost key={item.id} {...item} />;
+                } else {
+                  return <Post key={item.id} {...item} />;
+                }
+              })
+            )}
 
             {/* Sign up banner */}
             <div className="mt-8 bg-gradient-to-r from-purple-600 to-blue-500 rounded-lg p-6 text-center">
