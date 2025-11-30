@@ -11,8 +11,19 @@ export default function Signup() {
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
   const { signup } = useAuth();
   const router = useRouter();
+
+  const copyToClipboard = async (text: string, field: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,10 +52,32 @@ export default function Signup() {
         
         <div className="bg-gray-800 rounded-lg p-4 text-sm">
           <p className="text-gray-300 mb-2">
-            <strong>Demo Account Available:</strong>
+            <strong>Demo Account Available:</strong> <span className="text-xs text-gray-500">(click to copy)</span>
           </p>
-          <p className="text-gray-400">Username: <span className="text-tumblr-blue">demo</span></p>
-          <p className="text-gray-400">Password: <span className="text-tumblr-blue">demo123</span></p>
+          <p className="text-gray-400 flex items-center gap-2">
+            Username: 
+            <span 
+              onClick={() => copyToClipboard('demo', 'username')}
+              className="text-tumblr-blue cursor-pointer hover:underline select-none"
+            >
+              demo
+            </span>
+            {copiedField === 'username' && (
+              <span className="text-green-400 text-xs">✓ Copied!</span>
+            )}
+          </p>
+          <p className="text-gray-400 flex items-center gap-2">
+            Password: 
+            <span 
+              onClick={() => copyToClipboard('demo123', 'password')}
+              className="text-tumblr-blue cursor-pointer hover:underline select-none"
+            >
+              demo123
+            </span>
+            {copiedField === 'password' && (
+              <span className="text-green-400 text-xs">✓ Copied!</span>
+            )}
+          </p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
